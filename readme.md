@@ -1,19 +1,30 @@
-# e-Kréta  v3 API dokumentáció
+# e-Kréta v3 API dokumentáció
 
 *Krétás API-knak nem hivatalos gyűjteménye*
+### Még sok van hátra, ha tudsz, kérlek segíts a munkámban egy pull requesttel
 
-## Endpoints
+# Tartalomjegyzék: 
+1. [API végpontok](#API-végpontok)
+2. [Iskolák lekérdezése](#Iskolák-lekérdezése)
+3. [Bejelentkezés](#Bejelentkezés)
+4. [Felhasználó adatainak lekérdezése](#Felhasználó-adatainak-lekérdezése)
+5. [Jegyek lekérdezése](#Jegyek-lekérdezése)
+6. [Bejelentett számonkérések lekérése](#Bejelentett-számonkérések-lekérése)
+7. [Órarend lekérése](Órarend-lekérése)
+
+
+## API végpontok
 ```js
 const userAgent = "hu.ekreta.student/1.0.5/Android/0/0";
 const clientID = "kreta-ellenorzo-mobile";
 const eugyintezes = "https://eugyintezes.e-kreta.hu";
 const idp = "https://idp.e-kreta.hu";
-const inst = "https://huszargaliskola.e-kreta.hu";
+const inst = "https://XXXXXXXXXXXXXX.e-kreta.hu";
 
 const messageEndpoints = {
     sendMessage: `${eugyintezes}/api/v1/kommunikacio/uzenetek`,
-    messages: `${eugyintezes}/api/v1/kommunikacio/postaladaelemek/`, // endpoint
-    message: `${eugyintezes}/api/v1/kommunikacio/postaladaelemek/`, // id
+    messages: `${eugyintezes}/api/v1/kommunikacio/postaladaelemek/`,
+    message: `${eugyintezes}/api/v1/kommunikacio/postaladaelemek/`,
     recipientCategories: `${eugyintezes}/api/v1/adatszotarak/cimzetttipusok`,
     availableCategories: `${eugyintezes}/api/v1/kommunikacio/cimezhetotipusok`,
     recipientsTeacher: `${eugyintezes}/api/v1/kreta/alkalmazottak/tanar`,
@@ -37,13 +48,35 @@ const commonEndpoints= {
     capabilities: `${inst}/ellenorzo/V3/Sajat/Intezmenyek`
 };
 ```
+
+#### Lekéri a KRÉTA API linkjét:
+```bash
+curl http://kretamobile.blob.core.windows.net/configuration/ConfigurationDescriptor.json
+```
+* Egy sima böngészőből is [elérhető](http://kretamobile.blob.core.windows.net/configuration/ConfigurationDescriptor.json)
+
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
+{
+  "GlobalMobileApiUrlDEV": "https://kretaglobalmobileapidev.ekreta.hu/",
+  "GlobalMobileApiUrlTEST": "https://kretaglobalmobileapitest.ekreta.hu",
+  "GlobalMobileApiUrlUAT": "https://kretaglobalmobileapiuat.ekreta.hu",
+  "GlobalMobileApiUrlPROD": "https://kretaglobalmobileapi2.ekreta.hu"
+}
+</pre>
+</details>
+
 ## Iskolák lekérdezése
 #### Az összes iskola ahol be van vezetve az e-Kréta:  
 ```bash
 curl -H "apiKey: 7856d350-1fda-45f5-822d-e1a2f3f1acf0"  https://kretaglobalmobileapi2.ekreta.hu/api/v1/Institute
 ```
-#### A szerver válasza:  
-```json
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
 [
   {
     "instituteId": 7458,
@@ -57,15 +90,18 @@ curl -H "apiKey: 7856d350-1fda-45f5-822d-e1a2f3f1acf0"  https://kretaglobalmobil
     "featureToggleSet": {}
 },
   ...
-]
-```
+</pre>
+</details>
+
 #### Egy iskola adatainak lekérése ID alapján:
 ```bash
 curl -H "apiKey: 7856d350-1fda-45f5-822d-e1a2f3f1acf0"  https://kretaglobalmobileapi2.ekreta.hu/api/v1/Institute/3928
 ```
 
-#### A szerver válasza:  
-```json
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
 {
     "instituteId": 7458,
     "instituteCode": "appteszt",
@@ -77,23 +113,9 @@ curl -H "apiKey: 7856d350-1fda-45f5-822d-e1a2f3f1acf0"  https://kretaglobalmobil
     "informationUrl": "",
     "featureToggleSet": {}
 }
-```
-## API linkek lekérdezése
-#### Lekéri a KRÉTA API linkjét:
-```bash
-curl http://kretamobile.blob.core.windows.net/configuration/ConfigurationDescriptor.json
-```
-* Egy sima böngészőből is [elérhető](http://kretamobile.blob.core.windows.net/configuration/ConfigurationDescriptor.json)
+</pre>
+</details>
 
-#### A szerver válasza:  
-```json
-{
-  "GlobalMobileApiUrlDEV": "https://kretaglobalmobileapidev.ekreta.hu/",
-  "GlobalMobileApiUrlTEST": "https://kretaglobalmobileapitest.ekreta.hu",
-  "GlobalMobileApiUrlUAT": "https://kretaglobalmobileapiuat.ekreta.hu",
-  "GlobalMobileApiUrlPROD": "https://kretaglobalmobileapi2.ekreta.hu"
-}
-```
 ## Bejelentkezés
 ### Lekér egy Bearer kódot amit majd azonosításra fogunk használni később
 
@@ -110,9 +132,27 @@ curl --data "institute_code=xxxxxxxxxxx&userName=xxxxxxxxxxx&password=xxxxxxxxxx
    Amikor Password-el lekérjük az access_token-t akkor egy refresh_token-t is kapunk, amivel később a jelszó nélkül is frissíthetjük az access_token-ünket.
 * client_id: `kreta-ellenorzo-mobile`
 
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
+{
+  "access_token":"XXXXXXXXX",
+"expires_in":1800,
+"token_type":"Bearer",
+"refresh_token":"XXXXXXXX",
+"scope":"kozelkep-webapi.public kreta-ellenorzo-webapi.public kreta-fileservice-webapi.public kreta-mobile-global-webapi.public offline_access"
+} 
+</pre>
+</details>
+
 ### A Bearer token-ról:
-A bearer igazából egy JWT, decodeolva ezt kapjuk: 
-```json
+A bearer igazából egy JWT
+
+<details>
+<summary>Decodeolva ezt kapjuk</summary>
+<br>
+<pre>
 {
   "nbf": 00000,
   "exp": 00000,
@@ -150,19 +190,10 @@ A bearer igazából egy JWT, decodeolva ezt kapjuk:
     "password"
   ]
 }
+</pre>
+</details>
 
 
-```
-
-#### A szerver válasza:
-```json
-{
- "access_token":"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
- "refresh_token": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
- "expires_in":1800,
- "scope":"kozelkep-webapi.public kreta-ellenorzo-webapi.public kreta-fileservice-webapi.public kreta-mobile-global-webapi.public offline_access"
- }
-```
 
 ### `access_token` frissítése
 ```bash
@@ -177,11 +208,13 @@ curl --data "institute_code=xxxxxxxxxxx&refresh_token=xxxxxxxxxxx&grant_type=ref
 * kell hozzá a Bearer azonosító (lásd: bejelentkezés)
 
 ```bash
-curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" https://xxxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/TanuloAdatlap
+curl -H "Authorization: Bearer XXXXXXXX" -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" https://xxxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/TanuloAdatlap
 ```
 
-#### A szerver válasza:
-```json
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
 {
   "AnyjaNeve": "",
   "Cimek": [
@@ -228,18 +261,24 @@ curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     }
   }
 }
-```
+</pre>
+</details>
+
+
+
 ## Jegyek lekérdezése
 
 * a mobil alkalmazás használja
 * kell hozzá a Bearer azonosító (lásd: bejelentkezés)
 
 ```bash
-curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" https://xxxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/Ertekelesek?DatumTol=xxxx-xx-xx&DatumIg=xxxx-xx-xx
+curl -H "Authorization: Bearer XXXXXXX" -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" https://xxxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/Ertekelesek?DatumTol=xxxx-xx-xx&DatumIg=xxxx-xx-xx
 ```
 
-#### A szerver válasza:
-```json
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
 [{
     "ErtekeloTanarNeve": "",
     "ErtekFajta": {
@@ -283,18 +322,25 @@ curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   },
   ...
 ]
-```
+</pre>
+</details>
+
 ## Bejelentett számonkérések lekérése
 * a mobil alkalmazás használja
 * kell hozzá a Bearer azonosító (lásd: bejelentkezés)
 
 ```bash
-curl https://xxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/BejelentettSzamonkeresek?DatumTol=null&DatumIg=null -H "Authorization: Bearer XXXXXXXXXXXXXXX" -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" 
+curl https://xxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/BejelentettSzamonkeresek?DatumTol=null&DatumIg=null -H "Authorization: Bearer XXXXXXX" -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" 
 ```
 
-A szerver válasza:
 
-```json
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
+
+
+
 [
   {
     "BejelentesDatuma": "2020-11-10T11:05:31Z",
@@ -324,7 +370,10 @@ A szerver válasza:
   },
   ...
 ]
-```
+</pre>
+</details>
+
+
 ## Órarend lekérése
 ### Lekéri két adott időpont között megtartott (vagy elmaradt) tanórákat
 
@@ -337,8 +386,11 @@ A szerver válasza:
 curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" https://xxxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/OrarendElemek?DatumTol=2020-11-23&DatumIg=2020-11-28 -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" 
 ```
 
-#### A szerver válasza:
-```json
+
+<details>
+<summary>A szerver válasza</summary>
+<br>
+<pre>
 [
   {
     Allapot: {
@@ -373,7 +425,5 @@ curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   },
   ...
 ]
-
-
-
-# Még sok van hátra, ha tudsz, segíts a munkámban egy pull requesttel
+</pre>
+</details>
