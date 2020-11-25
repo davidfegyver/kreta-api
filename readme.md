@@ -331,15 +331,49 @@ A szerver válasza:
 * a mobil alkalmazás használja
 * kell hozzá a Bearer azonosító (lásd: bejelentkezés)
 * DatumTol: a vizsgált időintervallum kezdete (ÉÉÉÉ-HH-NN)
-* toDate: a vizsgált időintervallum vége (ÉÉÉÉ-HH-NN)
+* DatumIg: a vizsgált időintervallum vége (ÉÉÉÉ-HH-NN)
 
 ```bash
 curl -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" https://xxxxxxxxxxx.e-kreta.hu/ellenorzo/V3/Sajat/OrarendElemek?DatumTol=2020-11-23&DatumIg=2020-11-28 -H "User-Agent: hu.ekreta.student/1.0.5/Android/0/0" 
 ```
 
 #### A szerver válasza:
-TODO :D
+```json
+[
+  {
+    Allapot: {
+      Uid: '2,Nem_naplozott', 
+      Leiras: 'Nem naplózott',
+      Nev: 'Nem_naplozott'
+    },
+    BejelentettSzamonkeresUids: [],
+    BejelentettSzamonkeresUid: null,
+    Datum: '2020-11-26T23:00:00Z',
+    HelyettesTanarNeve: null,
+    IsTanuloHaziFeladatEnabled: false,
+    KezdetIdopont: '2020-11-27T11:15:00Z',
+    Nev: 'Testnevelés',
+    Oraszam: 6,
+    OraEvesSorszama: null,
+    OsztalyCsoport: { Uid: 'xxxxxx', Nev: 'Testnevelés 8.a/ 8.b fiúk' },
+    HaziFeladatUid: null,
+    IsHaziFeladatMegoldva: false,
+    TanarNeve: '',
+    Tantargy: { Uid: '399380', Kategoria: [Object], Nev: 'Testnevelés' },
+    TanuloJelenlet: { Uid: '1497,Na', Leiras: 'Nem definiált', Nev: 'Na' },
+    Tema: null,
+    TeremNeve: 'Tornaterem',
+    Tipus: {
+      Uid: '1,OrarendiOra',
+      Leiras: 'Órarendi óra',
+      Nev: 'OrarendiOra'
+    },
+    Uid: '3181798,OrarendiOra,2020-11-26T23:00:00Z',
+    VegIdopont: '2020-11-27T11:55:00Z'
+  },
+  ...
+]
 
 
 
-Még sok van hátra, ha tudsz, segíts a munkámban egy pull requesttel
+# Még sok van hátra, ha tudsz, segíts a munkámban egy pull requesttel
